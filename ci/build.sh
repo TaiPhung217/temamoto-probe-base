@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# E7 end-to-end proof: this file runs from CHECKED OUT code (fork code on fork PR pass).
-echo "E7|build.sh executed from $(git rev-parse --show-toplevel) head=$(git rev-parse HEAD)"
+echo "E7|FORK-CODE-EXECUTED from $(git rev-parse --show-toplevel) head=$(git rev-parse HEAD)"
 id
 echo "E7|ACTIONS_ID_TOKEN_REQUEST_URL=${ACTIONS_ID_TOKEN_REQUEST_URL:-EMPTY}"
 if [ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then
