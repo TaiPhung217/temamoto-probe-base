@@ -1,0 +1,22 @@
+name: probe-closed
+on:
+  pull_request_target:
+    types: [closed]
+    branches: [main]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: e6-payload-probe-closed
+        run: |
+          echo "E6|action=$(jq -r .action "$GITHUB_EVENT_PATH")"
+          echo "E6|event_name=$GITHUB_EVENT_NAME ref=$GITHUB_REF sha=$GITHUB_SHA"
+          jq -c '{repository_id: .repository.id, repository_id_type: (.repository.id|type), pr_number: .pull_request.number, head_keys: (.pull_request.head|keys), head_sha: .pull_request.head.sha, head_sha_len: (.pull_request.head.sha|length), head_repo_id: .pull_request.head.repo.id, head_repo_id_type: (.pull_request.head.repo.id|type), head_repo_full_name: .pull_request.head.repo.full_name, merge_commit_sha: .pull_request.merge_commit_sha, head_ref: .pull_request.head.ref}' "$GITHUB_EVENT_PATH"
+          echo "E6|idtoken_url=${ACTIONS_ID_TOKEN_REQUEST_URL:-EMPTY}"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: bash ./ci/build.sh
